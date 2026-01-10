@@ -5,25 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PrecificEcom - Pro Dashboard</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        :root {
+            --bg: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            --orange: #ff6600;
         }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 0;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Glassmorphism utility */
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .dark .glass-card {
-            background: rgba(15, 23, 42, 0.8);
-        }
+        
         .light .glass-card {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Prevent overscroll bounce on mobile */
+        html, body {
+            overscroll-behavior-y: none;
         }
     </style>
 <script type="importmap">
@@ -36,7 +54,7 @@
 }
 </script>
 </head>
-<body class="transition-colors duration-300">
+<body class="dark bg-[#020617] text-slate-100">
     <div id="root"></div>
 </body>
 </html>

@@ -11,6 +11,8 @@ export interface ProductData {
   contingencia: number;
   mktPerc: number;
   precoVenda: number;
+  taxaFixaPedido: number;
+  taxaConversao: number;
 }
 
 export interface CalculationResults {
