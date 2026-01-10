@@ -26,14 +26,10 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [pixStatus, setPixStatus] = useState('');
   
-  // Estados para simulação de kits
   const [kit2Preco, setKit2Preco] = useState(0);
   const [kit3Preco, setKit3Preco] = useState(0);
-
-  // Estado para planejamento de ads
   const [orcamentoDiario, setOrcamentoDiario] = useState(100);
 
-  // Initial Load
   useEffect(() => {
     const savedTheme = localStorage.getItem('precificecom_theme') as 'light' | 'dark';
     if (savedTheme) setTheme(savedTheme);
@@ -42,7 +38,6 @@ const App: React.FC = () => {
     if (savedHistory) setHistory(JSON.parse(savedHistory));
   }, []);
 
-  // Default exchange rates when currency changes
   useEffect(() => {
     if (moeda === 'R$') setTaxaCambio(1);
     else if (moeda === '$') setTaxaCambio(5.0);
@@ -50,7 +45,6 @@ const App: React.FC = () => {
     else if (moeda === '£') setTaxaCambio(6.5);
   }, [moeda]);
 
-  // Update theme on body
   useEffect(() => {
     document.body.className = theme === 'dark' 
       ? 'dark bg-[#020617] text-slate-100 min-h-screen p-4 md:p-8' 
@@ -58,11 +52,10 @@ const App: React.FC = () => {
     localStorage.setItem('precificecom_theme', theme);
   }, [theme]);
 
-  // Atualizar sugestão de kits quando o preço unitário mudar
   useEffect(() => {
     if (data.precoVenda > 0) {
-      setKit2Preco(parseFloat((data.precoVenda * 2 * 0.9).toFixed(2))); // 10% de desconto inicial
-      setKit3Preco(parseFloat((data.precoVenda * 3 * 0.85).toFixed(2))); // 15% de desconto inicial
+      setKit2Preco(parseFloat((data.precoVenda * 2 * 0.9).toFixed(2)));
+      setKit3Preco(parseFloat((data.precoVenda * 3 * 0.85).toFixed(2)));
     }
   }, [data.precoVenda]);
 
@@ -90,7 +83,6 @@ const App: React.FC = () => {
     const cpaIdeal = data.precoVenda * (data.mktPerc / 100);
     const vendasProjetadas = cpaIdeal > 0 ? orcamentoDiario / cpaIdeal : 0;
     const lucroProjetado = results.lucro * vendasProjetadas;
-    const faturamentoProjetado = data.precoVenda * vendasProjetadas;
     const roiEstimado = orcamentoDiario > 0 ? (lucroProjetado / orcamentoDiario) * 100 : 0;
     
     let healthScore = 0;
@@ -102,7 +94,7 @@ const App: React.FC = () => {
 
     if (results.breakEvenCpa > results.vlrMkt) healthScore += 20;
 
-    return { vendasProjetadas, lucroProjetado, faturamentoProjetado, roiEstimado, healthScore };
+    return { vendasProjetadas, lucroProjetado, roiEstimado, healthScore };
   }, [orcamentoDiario, data.mktPerc, data.precoVenda, results]);
 
   const calculateKitProfit = (units: number, totalPrice: number) => {
@@ -257,21 +249,15 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Layout - 3 COLUNAS HARMONIZADAS */}
+      {/* Main Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-        
-        {/* COLUNA 1: ENTRADAS */}
         <div className="flex flex-col gap-8 h-full">
           <section className="glass-card p-6 rounded-2xl shadow-xl flex-1">
             <h3 className={sectionTitleStyle}>Identificação e Custos</h3>
             <div className="space-y-4">
               <div className="text-center">
                 <label className={labelStyle}>Nome do Produto</label>
-                <input 
-                  type="text" id="nome" value={data.nome} onChange={handleChange}
-                  placeholder="Ex: Produto A" 
-                  className={inputStyle}
-                />
+                <input type="text" id="nome" value={data.nome} onChange={handleChange} placeholder="Ex: Produto A" className={inputStyle} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
@@ -337,42 +323,22 @@ const App: React.FC = () => {
           </section>
         </div>
 
-        {/* COLUNA 2: ESTRATÉGIA E OFERTA */}
         <div className="flex flex-col gap-8 h-full">
           <section className="glass-card p-6 rounded-2xl shadow-xl">
             <h3 className={sectionTitleStyle}>💡 Consultoria de Margem</h3>
             <div className="grid grid-cols-3 gap-3">
-              <button 
-                onClick={() => aplicarSugestao(0.2)} 
-                className="bg-slate-900/50 border border-slate-700 hover:border-orange-600 hover:text-orange-600 text-slate-300 font-semibold py-3 rounded-lg transition-all text-[0.85rem] light:bg-slate-100 light:text-slate-900 light:border-slate-300"
-              >
-                20% LUCRO
-              </button>
-              <button 
-                onClick={() => aplicarSugestao(0.3)} 
-                className="bg-slate-900/50 border border-slate-700 hover:border-orange-600 hover:text-orange-600 text-slate-300 font-semibold py-3 rounded-lg transition-all text-[0.85rem] light:bg-slate-100 light:text-slate-900 light:border-slate-300"
-              >
-                30% LUCRO
-              </button>
-              <button 
-                onClick={() => aplicarSugestao(0.4)} 
-                className="bg-slate-900/50 border border-slate-700 hover:border-orange-600 hover:text-orange-600 text-slate-300 font-semibold py-3 rounded-lg transition-all text-[0.85rem] light:bg-slate-100 light:text-slate-900 light:border-slate-300"
-              >
-                40% LUCRO
-              </button>
+              <button onClick={() => aplicarSugestao(0.2)} className="bg-slate-900/50 border border-slate-700 hover:border-orange-600 hover:text-orange-600 text-slate-300 font-semibold py-3 rounded-lg transition-all text-[0.85rem] light:bg-slate-100 light:text-slate-900 light:border-slate-300">20% LUCRO</button>
+              <button onClick={() => aplicarSugestao(0.3)} className="bg-slate-900/50 border border-slate-700 hover:border-orange-600 hover:text-orange-600 text-slate-300 font-semibold py-3 rounded-lg transition-all text-[0.85rem] light:bg-slate-100 light:text-slate-900 light:border-slate-300">30% LUCRO</button>
+              <button onClick={() => aplicarSugestao(0.4)} className="bg-slate-900/50 border border-slate-700 hover:border-orange-600 hover:text-orange-600 text-slate-300 font-semibold py-3 rounded-lg transition-all text-[0.85rem] light:bg-slate-100 light:text-slate-900 light:border-slate-300">40% LUCRO</button>
             </div>
           </section>
 
           <div className="bg-slate-900/60 border-2 border-orange-600 rounded-[2rem] p-6 text-center shadow-2xl relative overflow-hidden light:bg-white">
-            <label className="block text-orange-600 font-black uppercase text-[0.65rem] tracking-widest mb-3">PREÇO DE VENDA DEFINIDO</label>
+            <h3 className={sectionTitleStyle}>PREÇO DE VENDA DEFINIDO</h3>
             <div className="bg-black/20 border border-slate-700 rounded-xl p-3 mx-auto max-w-[280px] mb-4 dark:bg-black/40 light:bg-slate-100 light:border-slate-300">
               <div className="flex items-center justify-center">
                 <span className="text-2xl font-bold mr-2 text-slate-400">{moeda}</span>
-                <input 
-                  type="number" id="precoVenda" value={data.precoVenda || ''} onChange={handleChange}
-                  placeholder="0.00" 
-                  className="bg-transparent border-none text-center text-3xl md:text-4xl font-black text-white outline-none w-full light:text-slate-900"
-                />
+                <input type="number" id="precoVenda" value={data.precoVenda || ''} onChange={handleChange} placeholder="0.00" className="bg-transparent border-none text-center text-3xl md:text-4xl font-black text-white outline-none w-full light:text-slate-900" />
               </div>
             </div>
             <div className={`text-3xl md:text-4xl font-bold tracking-tighter mb-1 ${results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}`}>
@@ -385,63 +351,35 @@ const App: React.FC = () => {
 
           <section className="glass-card p-6 rounded-2xl shadow-xl flex-1">
             <h3 className={sectionTitleStyle}>🚀 Simulador de Ofertas (Kits)</h3>
-            <div className="space-y-4">
-              {/* KIT 2 UNIDADES */}
-              <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700 light:bg-slate-100">
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-[0.75rem] text-slate-400 font-bold uppercase">LEVE 2 UNIDADES</label>
-                  <span className="bg-orange-600 text-white text-[0.6rem] font-black px-1.5 py-0.5 rounded">-{kit2Results.desconto.toFixed(0)}% OFF</span>
-                </div>
-                <div className="flex items-center justify-center mb-3">
-                  <span className="text-sm font-bold text-slate-500 mr-1">{moeda}</span>
-                  <input 
-                    type="number" 
-                    value={kit2Preco || ''} 
-                    onChange={(e) => setKit2Preco(parseFloat(e.target.value) || 0)}
-                    className="bg-transparent border-b border-slate-600 text-center text-xl font-bold w-full outline-none light:text-slate-900"
-                  />
-                </div>
-                <div className="flex justify-between items-end text-sm font-bold">
-                  <div className="flex flex-col">
-                    <span className="text-[0.7rem] text-slate-500 uppercase">Lucro: <span className={kit2Results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit2Results.lucro)}</span></span>
-                    {moeda !== 'R$' && (
-                      <span className="text-[0.6rem] text-slate-400 font-medium leading-none mt-0.5">R$ {formatCurrency(kit2Results.lucro * taxaCambio)}</span>
-                    )}
+            <div className="space-y-6">
+              {[
+                { label: 'LEVE 2 UNIDADES', res: kit2Results, val: kit2Preco, set: setKit2Preco },
+                { label: 'LEVE 3 UNIDADES', res: kit3Results, val: kit3Preco, set: setKit3Preco }
+              ].map((kit, i) => (
+                <div key={i} className="bg-slate-800/40 p-5 rounded-xl border border-slate-700 light:bg-slate-100 shadow-sm">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-[0.85rem] text-slate-400 font-bold uppercase tracking-tight">{kit.label}</label>
+                    <span className="bg-orange-600 text-white text-[0.65rem] font-black px-2 py-0.5 rounded">-{kit.res.desconto.toFixed(0)}% OFF</span>
                   </div>
-                  <span className="text-orange-500 text-[0.7rem]">Margem: {kit2Results.margem.toFixed(1)}%</span>
-                </div>
-              </div>
-
-              {/* KIT 3 UNIDADES */}
-              <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700 light:bg-slate-100">
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-[0.75rem] text-slate-400 font-bold uppercase">LEVE 3 UNIDADES</label>
-                  <span className="bg-orange-600 text-white text-[0.6rem] font-black px-1.5 py-0.5 rounded">-{kit3Results.desconto.toFixed(0)}% OFF</span>
-                </div>
-                <div className="flex items-center justify-center mb-3">
-                  <span className="text-sm font-bold text-slate-500 mr-1">{moeda}</span>
-                  <input 
-                    type="number" 
-                    value={kit3Preco || ''} 
-                    onChange={(e) => setKit3Preco(parseFloat(e.target.value) || 0)}
-                    className="bg-transparent border-b border-slate-600 text-center text-xl font-bold w-full outline-none light:text-slate-900"
-                  />
-                </div>
-                <div className="flex justify-between items-end text-sm font-bold">
-                  <div className="flex flex-col">
-                    <span className="text-[0.7rem] text-slate-500 uppercase">Lucro: <span className={kit3Results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit3Results.lucro)}</span></span>
-                    {moeda !== 'R$' && (
-                      <span className="text-[0.6rem] text-slate-400 font-medium leading-none mt-0.5">R$ {formatCurrency(kit3Results.lucro * taxaCambio)}</span>
-                    )}
+                  <div className="flex items-center justify-center mb-3">
+                    <span className="text-lg font-bold text-slate-500 mr-1">{moeda}</span>
+                    <input type="number" value={kit.val || ''} onChange={(e) => kit.set(parseFloat(e.target.value) || 0)} className="bg-transparent border-b border-slate-600 text-center text-2xl font-black w-full outline-none light:text-slate-900" />
                   </div>
-                  <span className="text-orange-500 text-[0.7rem]">Margem: {kit3Results.margem.toFixed(1)}%</span>
+                  <div className="flex justify-between items-end gap-2">
+                    <div className="flex flex-col">
+                      <span className="text-[0.85rem] text-slate-500 font-bold uppercase">Lucro: <span className={kit.res.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit.res.lucro)}</span></span>
+                      {moeda !== 'R$' && (
+                        <span className="text-[0.75rem] text-slate-400 font-semibold mt-0.5 tracking-tight italic">R$ {formatCurrency(kit.res.lucro * taxaCambio)}</span>
+                      )}
+                    </div>
+                    <span className="text-orange-500 text-[0.85rem] font-black tracking-tight">Margem: {kit.res.margem.toFixed(1)}%</span>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </section>
         </div>
 
-        {/* COLUNA 3: VIABILIDADE E ROI */}
         <div className="flex flex-col gap-8 h-full">
           <section className="glass-card p-6 rounded-2xl shadow-xl flex-1">
             <h3 className={sectionTitleStyle}>Análise de Viabilidade</h3>
@@ -450,11 +388,11 @@ const App: React.FC = () => {
               <span className="text-right">Original</span>
               <span className="text-right text-orange-500">R$</span>
             </div>
-            <div className="space-y-3.5">
+            <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                <span className="text-sm font-medium text-slate-400">Markup Real:</span>
-                <span className="font-bold text-lg text-right">{results.markup.toFixed(2)}x</span>
-                <span className="font-bold text-lg text-right text-slate-600">-</span>
+                <span className="text-base font-bold text-slate-400">Markup Real:</span>
+                <span className="font-black text-xl text-right">{results.markup.toFixed(2)}x</span>
+                <span className="font-black text-xl text-right text-slate-600 opacity-0">-</span>
               </div>
               {[
                 { label: 'CPA Break-even', val: results.breakEvenCpa, color: 'text-orange-500' },
@@ -463,14 +401,16 @@ const App: React.FC = () => {
                 { label: 'CPA Marketing', val: results.vlrMkt, color: '' },
                 { label: 'Taxas + Imp.', val: results.vlrTaxasImp, color: '' }
               ].map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                  <span className="text-sm font-medium text-slate-400">{item.label}:</span>
-                  <span className={`font-bold text-[0.8rem] text-right ${moeda === 'R$' ? 'text-slate-600' : (item.color || '')}`}>
-                    {moeda === 'R$' ? '-' : formatCurrency(item.val)}
-                  </span>
-                  <span className={`font-bold text-[0.8rem] text-right ${item.color || ''}`}>
-                    {formatCurrency(item.val * taxaCambio)}
-                  </span>
+                <div key={idx} className="flex justify-between items-center py-2.5 border-b border-slate-700/50">
+                  <span className="text-base font-bold text-slate-400">{item.label}:</span>
+                  <div className="flex gap-4">
+                    <span className={`font-black text-lg text-right min-w-[80px] ${moeda === 'R$' ? 'text-slate-600' : (item.color || '')}`}>
+                      {moeda === 'R$' ? '-' : formatCurrency(item.val)}
+                    </span>
+                    <span className={`font-black text-lg text-right min-w-[80px] ${item.color || ''}`}>
+                      {formatCurrency(item.val * taxaCambio)}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -482,45 +422,33 @@ const App: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <h3 className="text-orange-600 font-black uppercase text-sm tracking-widest mb-6 flex items-center gap-2">
-              <span className="text-xl">📈</span> Planejamento de Escala & ROI
-            </h3>
+            <h3 className="text-orange-600 font-black uppercase text-sm tracking-widest mb-6 flex items-center gap-2"><span className="text-xl">📈</span> Planejamento de Escala & ROI</h3>
             <div className="space-y-6">
               <div className="text-center">
                 <label className={labelStyle}>Orçamento Diário Ads ({moeda})</label>
-                <input 
-                  type="number" 
-                  value={orcamentoDiario || ''} 
-                  onChange={(e) => setOrcamentoDiario(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-slate-800/80 border border-slate-700 p-2.5 rounded-lg text-center text-xl font-bold outline-none focus:ring-2 focus:ring-orange-600 light:bg-slate-100 light:text-slate-900"
-                />
+                <input type="number" value={orcamentoDiario || ''} onChange={(e) => setOrcamentoDiario(parseFloat(e.target.value) || 0)} className="w-full bg-slate-800/80 border border-slate-700 p-2.5 rounded-lg text-center text-3xl font-black outline-none focus:ring-2 focus:ring-orange-600 light:bg-slate-100 light:text-slate-900 shadow-inner" />
+              </div>
+              <div className="flex justify-between items-center py-3 border-b border-slate-700/50">
+                <span className="text-sm font-bold text-slate-400 uppercase">Pedidos Previstos:</span>
+                <span className="font-black text-2xl text-orange-500">{scaleMetrics.vendasProjetadas.toFixed(0)} <small className="text-[0.6rem] uppercase opacity-50">/ dia</small></span>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 light:bg-slate-50 text-center">
-                  <small className="block text-[0.55rem] text-slate-500 font-bold uppercase mb-1 leading-tight">Lucro Diário</small>
-                  <div className={`text-base font-black ${scaleMetrics.lucroProjetado >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {moeda} {formatCurrency(scaleMetrics.lucroProjetado)}
-                  </div>
+                <div className="bg-slate-900/40 p-4 rounded-xl border border-slate-700/50 light:bg-slate-50 text-center shadow-md">
+                  <small className="block text-[0.65rem] text-slate-500 font-bold uppercase mb-1 leading-tight tracking-widest">Lucro Diário</small>
+                  <div className={`text-xl font-black ${scaleMetrics.lucroProjetado >= 0 ? 'text-green-500' : 'text-red-500'}`}>{moeda} {formatCurrency(scaleMetrics.lucroProjetado)}</div>
                 </div>
-                <div className="bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 light:bg-slate-50 text-center">
-                  <small className="block text-[0.55rem] text-slate-500 font-bold uppercase mb-1 leading-tight">ROI Projetado</small>
-                  <div className="text-base font-black text-orange-500">
-                    {scaleMetrics.roiEstimado.toFixed(0)}%
-                  </div>
+                <div className="bg-slate-900/40 p-4 rounded-xl border border-slate-700/50 light:bg-slate-50 text-center shadow-md">
+                  <small className="block text-[0.65rem] text-slate-500 font-bold uppercase mb-1 leading-tight tracking-widest">ROI Projetado</small>
+                  <div className="text-xl font-black text-orange-500">{scaleMetrics.roiEstimado.toFixed(0)}%</div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[0.65rem] font-bold uppercase text-slate-500">
                   <span>Saúde da Oferta</span>
-                  <span className={scaleMetrics.healthScore > 70 ? 'text-green-500' : scaleMetrics.healthScore > 40 ? 'text-yellow-500' : 'text-red-500'}>
-                    {scaleMetrics.healthScore}%
-                  </span>
+                  <span className={scaleMetrics.healthScore > 70 ? 'text-green-500' : scaleMetrics.healthScore > 40 ? 'text-yellow-500' : 'text-red-500'}>{scaleMetrics.healthScore}%</span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-2 light:bg-slate-200 overflow-hidden">
-                  <div 
-                    className={`h-2 rounded-full transition-all duration-1000 ${scaleMetrics.healthScore > 70 ? 'bg-green-500' : scaleMetrics.healthScore > 40 ? 'bg-yellow-500' : 'bg-red-500'}`} 
-                    style={{ width: `${scaleMetrics.healthScore}%` }}
-                  ></div>
+                <div className="w-full bg-slate-800 rounded-full h-2.5 light:bg-slate-200 overflow-hidden shadow-inner">
+                  <div className={`h-2.5 rounded-full transition-all duration-1000 ${scaleMetrics.healthScore > 70 ? 'bg-green-500' : scaleMetrics.healthScore > 40 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${scaleMetrics.healthScore}%` }}></div>
                 </div>
               </div>
             </div>
@@ -528,7 +456,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* Projections */}
       <div className="mt-12">
         <h3 className={sectionTitleStyle}>Projeção Mensal & Meta Diária</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -536,16 +463,10 @@ const App: React.FC = () => {
             const lucroTotal = results.lucro * q;
             const lucroTotalBRL = lucroTotal * taxaCambio;
             return (
-              <div key={q} className="glass-card p-5 rounded-xl text-center border-orange-600/20 shadow-lg">
+              <div key={q} className="glass-card p-5 rounded-xl text-center border-orange-600/20 shadow-lg hover:border-orange-600 transition-colors">
                 <small className="block text-[0.8rem] text-slate-500 font-bold uppercase mb-2">{q} VENDAS/MÊS</small>
-                <div className={`font-bold text-2xl ${lucroTotal >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                  {moeda} {formatCurrency(lucroTotal)}
-                </div>
-                {moeda !== 'R$' && (
-                  <div className="text-[0.85rem] text-slate-500 font-medium leading-tight text-center mt-0.5">
-                    R$ {formatCurrency(lucroTotalBRL)}
-                  </div>
-                )}
+                <div className={`font-bold text-2xl ${lucroTotal >= 0 ? 'text-green-500' : 'text-red-500'}`}>{moeda} {formatCurrency(lucroTotal)}</div>
+                {moeda !== 'R$' && <div className="text-[0.85rem] text-slate-500 font-medium leading-tight text-center mt-0.5">R$ {formatCurrency(lucroTotalBRL)}</div>}
                 <span className="block text-[0.8rem] text-slate-500 mt-2 font-semibold">Média {(q/30).toFixed(0)}/dia</span>
               </div>
             );
@@ -553,19 +474,12 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* BOTÃO SALVAR CENTRALIZADO APÓS PROJEÇÕES */}
       <div className="mt-10 flex justify-center">
         <div className="w-full max-w-[400px]">
-          <button 
-            onClick={salvarHistorico} 
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-5 rounded-2xl transition-all uppercase tracking-widest shadow-xl shadow-green-900/20 text-base"
-          >
-            SALVAR NO HISTÓRICO
-          </button>
+          <button onClick={salvarHistorico} className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-5 rounded-2xl transition-all uppercase tracking-widest shadow-xl shadow-green-900/20 text-base">SALVAR NO HISTÓRICO</button>
         </div>
       </div>
 
-      {/* History */}
       <div className="mt-16 pt-8 border-t border-slate-800">
         <h3 className={sectionTitleStyle}>Histórico de Produtos Salvos</h3>
         <div className="space-y-4">
@@ -583,40 +497,22 @@ const App: React.FC = () => {
                   <strong className="text-green-500 text-lg">Lucro: {item.lucro}</strong>
                   <small className="text-slate-500 block text-[0.75rem] font-bold uppercase tracking-wider">{item.margem} Margem</small>
                 </div>
-                <button 
-                  onClick={() => excluirItem(item.id)}
-                  className="w-10 h-10 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-full flex items-center justify-center transition-all border border-red-500/30"
-                >
-                  ✕
-                </button>
+                <button onClick={() => excluirItem(item.id)} className="w-10 h-10 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-full flex items-center justify-center transition-all border border-red-500/30">✕</button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Footer / Support */}
       <footer className="mt-20 mb-12 text-center space-y-10">
         <div className="glass-card p-12 rounded-[2.5rem] shadow-2xl max-w-3xl mx-auto text-center border-orange-600/30">
           <h2 className="text-orange-600 text-3xl font-black mb-6">Obrigado por utilizar o PrecificEcom!</h2>
-          <p className="text-slate-400 text-base max-w-lg mx-auto mb-10 font-medium leading-relaxed">
-            Ferramenta desenvolvida para ajudar empreendedores a escalarem com lucro real no e-commerce.
-          </p>
-          <button 
-            onClick={fazerPix}
-            className="bg-green-600 hover:bg-green-700 text-white font-black py-5 px-10 rounded-2xl transition-all uppercase tracking-widest shadow-lg shadow-green-900/40 text-base"
-          >
-            APOIAR O PROJETO (VIA PIX)
-          </button>
-          <div className="mt-8 text-[0.8rem] text-slate-500 font-bold leading-relaxed">
-            CNPJ: 49.276.400/0001-13 <br />
-            OTIMIZA NEGOCIOS DIGITAIS LTDA | MEDIATION DIGITAL
-          </div>
+          <p className="text-slate-400 text-base max-w-lg mx-auto mb-10 font-medium leading-relaxed">Ferramenta desenvolvida para ajudar empreendedores a escalarem com lucro real no e-commerce.</p>
+          <button onClick={fazerPix} className="bg-green-600 hover:bg-green-700 text-white font-black py-5 px-10 rounded-2xl transition-all uppercase tracking-widest shadow-lg shadow-green-900/40 text-base">APOIAR O PROJETO (VIA PIX)</button>
+          <div className="mt-8 text-[0.8rem] text-slate-500 font-bold leading-relaxed">CNPJ: 49.276.400/0001-13 <br /> OTIMIZA NEGOCIOS DIGITAIS LTDA | MEDIATION DIGITAL</div>
           {pixStatus && <p className="mt-6 text-sm text-green-500 font-black animate-pulse">{pixStatus}</p>}
         </div>
-        <div className="text-[0.75rem] text-slate-600 font-bold tracking-widest uppercase pb-10">
-          © 2025 PrecificEcom - Todos os direitos reservados.
-        </div>
+        <div className="text-[0.75rem] text-slate-600 font-bold tracking-widest uppercase pb-10">© 2025 PrecificEcom - Todos os direitos reservados.</div>
       </footer>
     </div>
   );
