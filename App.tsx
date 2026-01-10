@@ -386,6 +386,7 @@ const App: React.FC = () => {
           <section className="glass-card p-6 rounded-2xl shadow-xl flex-1">
             <h3 className={sectionTitleStyle}>🚀 Simulador de Ofertas (Kits)</h3>
             <div className="space-y-4">
+              {/* KIT 2 UNIDADES */}
               <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700 light:bg-slate-100">
                 <div className="flex justify-between items-center mb-2">
                   <label className="text-[0.75rem] text-slate-400 font-bold uppercase">LEVE 2 UNIDADES</label>
@@ -400,12 +401,18 @@ const App: React.FC = () => {
                     className="bg-transparent border-b border-slate-600 text-center text-xl font-bold w-full outline-none light:text-slate-900"
                   />
                 </div>
-                <div className="flex justify-between items-center text-sm font-bold">
-                  <span className="text-[0.7rem] text-slate-500 uppercase">Lucro: <span className={kit2Results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit2Results.lucro)}</span></span>
-                  <span className="text-orange-500 text-[0.7rem]">{kit2Results.margem.toFixed(1)}%</span>
+                <div className="flex justify-between items-end text-sm font-bold">
+                  <div className="flex flex-col">
+                    <span className="text-[0.7rem] text-slate-500 uppercase">Lucro: <span className={kit2Results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit2Results.lucro)}</span></span>
+                    {moeda !== 'R$' && (
+                      <span className="text-[0.6rem] text-slate-400 font-medium leading-none mt-0.5">R$ {formatCurrency(kit2Results.lucro * taxaCambio)}</span>
+                    )}
+                  </div>
+                  <span className="text-orange-500 text-[0.7rem]">Margem: {kit2Results.margem.toFixed(1)}%</span>
                 </div>
               </div>
 
+              {/* KIT 3 UNIDADES */}
               <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700 light:bg-slate-100">
                 <div className="flex justify-between items-center mb-2">
                   <label className="text-[0.75rem] text-slate-400 font-bold uppercase">LEVE 3 UNIDADES</label>
@@ -420,9 +427,14 @@ const App: React.FC = () => {
                     className="bg-transparent border-b border-slate-600 text-center text-xl font-bold w-full outline-none light:text-slate-900"
                   />
                 </div>
-                <div className="flex justify-between items-center text-sm font-bold">
-                  <span className="text-[0.7rem] text-slate-500 uppercase">Lucro: <span className={kit3Results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit3Results.lucro)}</span></span>
-                  <span className="text-orange-500 text-[0.7rem]">{kit3Results.margem.toFixed(1)}%</span>
+                <div className="flex justify-between items-end text-sm font-bold">
+                  <div className="flex flex-col">
+                    <span className="text-[0.7rem] text-slate-500 uppercase">Lucro: <span className={kit3Results.lucro >= 0 ? 'text-green-500' : 'text-red-500'}>{moeda} {formatCurrency(kit3Results.lucro)}</span></span>
+                    {moeda !== 'R$' && (
+                      <span className="text-[0.6rem] text-slate-400 font-medium leading-none mt-0.5">R$ {formatCurrency(kit3Results.lucro * taxaCambio)}</span>
+                    )}
+                  </div>
+                  <span className="text-orange-500 text-[0.7rem]">Margem: {kit3Results.margem.toFixed(1)}%</span>
                 </div>
               </div>
             </div>
